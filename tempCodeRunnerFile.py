@@ -129,7 +129,7 @@ def dashboard():
     # Streak (simple)
     streak = len(skills)
 
-    return render_template("dashboard.html",
+    return render_template("index.html",
                            skills=skills,
                            suggestions=suggestions,
                            skill_names=skill_names,
