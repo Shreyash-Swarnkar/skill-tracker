@@ -1,11 +1,32 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, send_from_directory
 import sqlite3
-import datetime
+from datetime import datetime, timedelta, date
 
-app = Flask(__name__)
-app.secret_key = "secret123"
+# =========================
+# 🚀 APP INIT
+# =========================
+app = Flask(__name__, template_folder='.', static_folder='.')
 
-# ---------------- DB ----------------
+# 🔥 FIXED SESSION CONFIG
+app.config['SECRET_KEY'] = 'supersecretkey123'
+app.config['SESSION_PERMANENT'] = True
+
+
+# =========================
+# 📁 STATIC FILES
+# =========================
+@app.route('/style.css')
+def style():
+    return send_from_directory('.', 'style.css')
+
+@app.route('/script.js')
+def script():
+    return send_from_directory('.', 'script.js')
+
+
+# =========================
+# 🗄️ DATABASE INIT
+# =========================
 def init_db():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
@@ -13,8 +34,7 @@ def init_db():
     cur.execute("""
     CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT,
-        password TEXT
+        email TEXT
     )
     """)
 
@@ -28,11 +48,10 @@ def init_db():
     """)
 
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS todos(
+    CREATE TABLE IF NOT EXISTS activity(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
-        task TEXT,
-        status TEXT
+        date TEXT
     )
     """)
 
@@ -41,133 +60,214 @@ def init_db():
 
 init_db()
 
-# ---------------- SUGGESTION ----------------
-def suggest_skill(progress):
-    if progress < 30:
-        return "Start basics"
-    elif progress < 70:
-        return "Practice more"
-    else:
-        return "Build projects 🚀"
 
-# ---------------- ROUTES ----------------
-@app.route('/')
+# =========================
+# 🔥 STREAK FUNCTION
+# =========================
+def calculate_streak(user_id):
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("SELECT DISTINCT date FROM activity WHERE user_id=? ORDER BY date DESC", (user_id,))
+    dates = [row[0] for row in cur.fetchall()]
+
+    conn.close()
+
+    streak = 0
+    today = datetime.today()
+
+    for i, d in enumerate(dates):
+        if datetime.strptime(d, "%Y-%m-%d").date() == (today - timedelta(days=i)).date():
+            streak += 1
+        else:
+            break
+
+    return streak
+
+
+# =========================
+# 🏠 HOME
+# =========================
+@app.route("/")
 def home():
-    return redirect('/login')
+    return redirect("/login")
 
-# -------- REGISTER --------
-@app.route('/register', methods=['GET','POST'])
-def register():
-    if request.method == 'POST':
-        u = request.form['username']
-        p = request.form['password']
 
-        conn = sqlite3.connect("database.db")
-        cur = conn.cursor()
-        cur.execute("INSERT INTO users(username,password) VALUES(?,?)",(u,p))
-        conn.commit()
-        conn.close()
-
-        return redirect('/login')
-    return render_template('register.html')
-
-# -------- LOGIN --------
-@app.route('/login', methods=['GET','POST'])
+# =========================
+# 🔐 LOGIN PAGE
+# =========================
+@app.route("/login")
 def login():
-    if request.method == 'POST':
-        u = request.form['username']
-        p = request.form['password']
+    return render_template("login.html")
 
-        conn = sqlite3.connect("database.db")
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM users WHERE username=? AND password=?",(u,p))
-        user = cur.fetchone()
-        conn.close()
 
-        if user:
-            session['user_id'] = user[0]
-            return redirect('/dashboard')
+# =========================
+# 🔐 GOOGLE LOGIN (FIXED)
+# =========================
+@app.route("/google_login", methods=["POST"])
+def google_login():
 
-    return render_template('login.html')
+    print("🔥 GOOGLE LOGIN HIT")
 
-# -------- DASHBOARD --------
-@app.route('/dashboard', methods=['GET','POST'])
-def dashboard():
-    if 'user_id' not in session:
-        return redirect('/login')
-
-    user_id = session['user_id']
+    email = request.json["email"]
+    print("EMAIL:", email)
 
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
 
-    # ADD SKILL
-    if request.method == 'POST':
-        name = request.form['name']
-        progress = request.form['progress']
-        cur.execute("INSERT INTO skills(user_id,name,progress) VALUES(?,?,?)",
-                    (user_id,name,progress))
+    # Check if user exists
+    cur.execute("SELECT * FROM users WHERE email=?", (email,))
+    user = cur.fetchone()
+
+    # Create if not exists
+    if not user:
+        cur.execute("INSERT INTO users (email) VALUES (?)", (email,))
         conn.commit()
 
-    # FETCH SKILLS
+        cur.execute("SELECT * FROM users WHERE email=?", (email,))
+        user = cur.fetchone()
+
+    # 🔥 IMPORTANT FIX
+    session["user_id"] = user[0]
+    session.permanent = True
+
+    print("SESSION SET:", session.get("user_id"))
+
+    conn.close()
+
+    return "OK"
+
+
+# =========================
+# 📊 DASHBOARD
+# =========================
+@app.route("/dashboard", methods=["GET", "POST"])
+def dashboard():
+
+    print("SESSION IN DASHBOARD:", session.get("user_id"))
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user_id = session["user_id"]
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    # ➕ ADD SKILL
+    if request.method == "POST":
+        name = request.form["name"]
+        progress = request.form["progress"]
+
+        cur.execute("""
+        INSERT INTO skills (user_id, name, progress)
+        VALUES (?, ?, ?)
+        """, (user_id, name, progress))
+
+        # 🔥 SAVE ACTIVITY (STREAK)
+        today = str(date.today())
+        cur.execute("""
+        INSERT INTO activity (user_id, date)
+        VALUES (?, ?)
+        """, (user_id, today))
+
+        conn.commit()
+
+    # 📊 FETCH SKILLS
     cur.execute("SELECT * FROM skills WHERE user_id=?", (user_id,))
     skills = cur.fetchall()
 
-    # FETCH TODOS
-    cur.execute("SELECT * FROM todos WHERE user_id=?", (user_id,))
-    todos = cur.fetchall()
-
     conn.close()
 
-    # Suggestions
-    suggestions = [suggest_skill(s[3]) for s in skills]
-
-    # Graph
+    # 📈 GRAPH DATA
     skill_names = [s[2] for s in skills]
     skill_progress = [s[3] for s in skills]
 
-    # Streak (simple)
-    streak = len(skills)
+    # 🧠 SUGGESTIONS
+    suggestions = []
+    for s in skills:
+        if s[3] < 30:
+            suggestions.append("Start with basics")
+        elif s[3] < 70:
+            suggestions.append("Practice more problems")
+        else:
+            suggestions.append("Build real projects 🚀")
 
-    return render_template("index.html",
-                           skills=skills,
-                           suggestions=suggestions,
-                           skill_names=skill_names,
-                           skill_progress=skill_progress,
-                           streak=streak,
-                           todos=todos)
+    # 🔥 STREAK
+    streak = calculate_streak(user_id)
 
-# -------- ADD TODO --------
-@app.route('/add_todo', methods=['POST'])
-def add_todo():
-    user_id = session['user_id']
-    task = request.form['task']
+    return render_template(
+        "index.html",
+        skills=skills,
+        skill_names=skill_names,
+        skill_progress=skill_progress,
+        suggestions=suggestions,
+        streak=streak
+    )
+
+
+# =========================
+# ✏️ EDIT
+# =========================
+@app.route("/edit/<int:id>", methods=["GET", "POST"])
+def edit(id):
 
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
-    cur.execute("INSERT INTO todos(user_id,task,status) VALUES(?,?,?)",
-                (user_id,task,"pending"))
-    conn.commit()
+
+    if request.method == "POST":
+        name = request.form["name"]
+        progress = request.form["progress"]
+
+        cur.execute("""
+        UPDATE skills SET name=?, progress=?
+        WHERE id=?
+        """, (name, progress, id))
+
+        conn.commit()
+        conn.close()
+
+        return redirect("/dashboard")
+
+    cur.execute("SELECT * FROM skills WHERE id=?", (id,))
+    skill = cur.fetchone()
+
     conn.close()
 
-    return redirect('/dashboard')
+    return render_template("edit.html", skill=skill)
 
-# -------- DELETE TODO --------
-@app.route('/delete_todo/<int:id>')
-def delete_todo(id):
+
+# =========================
+# 🗑 DELETE
+# =========================
+@app.route("/delete/<int:id>")
+def delete(id):
+
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
-    cur.execute("DELETE FROM todos WHERE id=?", (id,))
+
+    cur.execute("DELETE FROM skills WHERE id=?", (id,))
     conn.commit()
     conn.close()
-    return redirect('/dashboard')
 
-# -------- LOGOUT --------
-@app.route('/logout')
+    return redirect("/dashboard")
+
+
+# =========================
+# 🚪 LOGOUT
+# =========================
+@app.route("/logout")
 def logout():
     session.clear()
-    return redirect('/login')
+    return redirect("/login")
 
+
+# =========================
+# 🚀 RUN
+# =========================
 if __name__ == "__main__":
     app.run(debug=True)
 
+
+
+    

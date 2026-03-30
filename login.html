@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login - Skill Tracker</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/style.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .login-card {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 35px;
+            border-radius: 20px;
+            width: 350px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .btn-google {
+            background: #db4437;
+            color: white;
+            border: none;
+        }
+
+        .btn-google:hover {
+            background: #c1351d;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card">
+
+        <h3 class="mb-3">🚀 Skill Tracker</h3>
+        <p class="mb-4">Track your growth like a pro</p>
+
+        <!-- GOOGLE LOGIN -->
+        <button onclick="googleLogin()" class="btn btn-google w-100 mb-3">
+            🔐 Login with Google
+        </button>
+
+        <small>Secure login powered by Google</small>
+
+    </div>
+
+    <!-- 🔥 FIREBASE SCRIPT -->
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCNVqD7P1k9ChJjSU34Ogdm_ImqrBxWt-8",
+            authDomain: "skill-tracker-d999b.firebaseapp.com",
+            projectId: "skill-tracker-d999b",
+            storageBucket: "skill-tracker-d999b.firebasestorage.app",
+            messagingSenderId: "422542205511",
+            appId: "1:422542205511:web:4b327b3f71408b752c0762",
+            measurementId: "G-WRVT7PFEP3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // 🔥 FIXED LOGIN FUNCTION
+        window.googleLogin = function () {
+
+            console.log("🔥 Button clicked");
+
+            const provider = new GoogleAuthProvider();
+
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    console.log("Google login success");
+
+                    const user = result.user;
+
+                    fetch("http://127.0.0.1:5000/google_login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            email: user.email
+                        })
+                    })
+                        .then(res => res.text())
+                        .then(data => {
+                            console.log(data);
+
+                            // 🔥 FIXED REDIRECT
+                            window.location.replace("/dashboard");
+                        });
+
+                })
+                .catch((error) => {
+                    console.log("❌ ERROR:", error);
+                    alert(error.message);
+                });
+        };
+
+    </script>
+
+</body>
+
+</html>
