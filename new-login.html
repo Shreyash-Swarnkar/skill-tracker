@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill Tracker - Sign In</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error-container": "#6e0a12",
+              "tertiary-fixed": "#e0c8f9",
+              "secondary-dim": "#465467",
+              "on-tertiary": "#fef6ff",
+              "on-primary-container": "#000000",
+              "on-surface": "#2c3437",
+              "on-secondary-fixed": "#324052",
+              "surface-container-high": "#e3e9ed",
+              "error-dim": "#67040d",
+              "secondary-fixed-dim": "#c6d6ec",
+              "primary-container": "#7073ff",
+              "on-secondary-container": "#445365",
+              "secondary-container": "#d4e4fa",
+              "surface-bright": "#f7f9fb",
+              "outline-variant": "#acb3b7",
+              "on-tertiary-container": "#513f67",
+              "surface-container-highest": "#dce4e8",
+              "surface-container": "#eaeff2",
+              "inverse-primary": "#8083ff",
+              "primary-fixed-dim": "#6366f1",
+              "on-secondary-fixed-variant": "#4e5d6f",
+              "primary-fixed": "#7073ff",
+              "surface-dim": "#d4dbdf",
+              "on-background": "#2c3437",
+              "secondary": "#526073",
+              "tertiary-dim": "#5d4b74",
+              "tertiary": "#6a5780",
+              "tertiary-container": "#e0c8f9",
+              "primary-dim": "#3d3dcb",
+              "tertiary-fixed-dim": "#d1bbea",
+              "error-container": "#fa746f",
+              "surface": "#f7f9fb",
+              "primary": "#4a4bd7",
+              "secondary-fixed": "#d4e4fa",
+              "surface-tint": "#4a4bd7",
+              "error": "#a83836",
+              "on-secondary": "#f7f9ff",
+              "background": "#f7f9fb",
+              "inverse-surface": "#0b0f10",
+              "on-error": "#fff7f6",
+              "on-primary-fixed-variant": "#010028",
+              "surface-container-low": "#f0f4f7",
+              "inverse-on-surface": "#9a9d9f",
+              "outline": "#747c80",
+              "on-surface-variant": "#596064",
+              "on-primary": "#fbf7ff",
+              "on-tertiary-fixed-variant": "#5b4971",
+              "on-primary-fixed": "#000000",
+              "on-tertiary-fixed": "#3d2c53",
+              "surface-container-lowest": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ambient-shadow {
+            box-shadow: 0 12px 48px rgba(44, 52, 55, 0.08);
+        }
+        .login-gradient {
+            background: linear-gradient(135deg, #4a4bd7 0%, #7073ff 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col">
+    <nav class="fixed top-0 w-full z-50 bg-[#f7f9fb]/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-between items-center px-12 py-6 max-w-full">
+        <div class="flex items-center gap-12">
+            <span class="text-xl font-bold text-[#2c3437] dark:text-slate-100 font-headline tracking-tight">Skill Tracker</span>
+            <div class="hidden md:flex gap-8">
+                <a class="text-[#2c3437]/60 dark:text-slate-400 font-['Plus_Jakarta_Sans'] tracking-tight hover:text-[#4a4bd7] transition-colors duration-300" href="#">Home</a>
+                <a class="text-[#2c3437]/60 dark:text-slate-400 font-['Plus_Jakarta_Sans'] tracking-tight hover:text-[#4a4bd7] transition-colors duration-300" href="#">Features</a>
+                <a class="text-[#2c3437]/60 dark:text-slate-400 font-['Plus_Jakarta_Sans'] tracking-tight hover:text-[#4a4bd7] transition-colors duration-300" href="#">Pricing</a>
+            </div>
+        </div>
+        <!-- <div class="flex items-center gap-4">
+            <button class="text-[#4a4bd7] dark:text-[#7073ff] font-semibold font-['Plus_Jakarta_Sans'] tracking-tight active:scale-95 transition-transform">Sign Up</button>
+        </div> -->
+    </nav>
+    <main class="flex-grow flex items-center justify-center pt-32 pb-20 px-6">
+        <div class="w-full max-w-[1200px] flex flex-col lg:flex-row items-center gap-16">
+            <div class="w-full lg:w-2/5 text-left space-y-6">
+                <h1 class="text-5xl lg:text-7xl font-extrabold font-headline text-on-surface tracking-tighter leading-[1.1]">
+                    Simplified <br/>
+                    <span class="text-primary italic">Access.</span>
+                </h1>
+                <p class="text-on-surface-variant body-sm max-w-sm font-body leading-relaxed">
+                    We've streamlined your experience. Enjoy a faster, more secure way to enter your digital sanctuary using your preferred authentication provider.
+                </p>
+                <div class="pt-4 flex gap-4 items-center">
+                    <div class="h-[1px] w-12 bg-outline-variant opacity-20"></div>
+                    <span class="text-xs uppercase tracking-widest font-bold text-on-surface/40">Verified Google Access</span>
+                </div>
+            </div>
+            <div class="w-full lg:w-[460px] bg-surface-container-lowest ambient-shadow rounded-2xl p-12 relative overflow-hidden text-center">
+                <div class="absolute top-0 left-0 w-full h-[4px] login-gradient opacity-20"></div>
+                <header class="mb-12">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-primary/5 rounded-full mb-6">
+                        <span class="material-symbols-outlined text-primary text-3xl">key</span>
+                    </div>
+                    <h2 class="text-3xl font-bold font-headline text-on-surface tracking-tight mb-3">Sign In</h2>
+                    <p class="text-on-surface-variant text-base">Quickly access your workspace with your Google account</p>
+                </header>
+                <div class="space-y-8">
+                    <button onclick="googleLogin()" class="w-full flex items-center justify-center gap-4 py-5 px-6 bg-surface-container-lowest border border-outline-variant/30 hover:border-primary/30 hover:bg-surface-container-low rounded-2xl transition-all duration-300 group shadow-sm hover:shadow-md">
+                        <svg class="w-6 h-6 transition-transform group-hover:scale-110" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_16020_399)">
+                                <path fill="#4285F4" d="M18.64 10.205q-.002-.958-.164-1.841H10v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615"></path>
+                                <path fill="#34A853" d="M10 19c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H1.957v2.332A9 9 0 0 0 10 19"></path>
+                                <path fill="#FBBC04" d="M4.964 11.71A5.4 5.4 0 0 1 4.682 10c0-.593.102-1.17.282-1.71V5.958H1.957A9 9 0 0 0 1 10c0 1.452.348 2.827.957 4.042z"></path>
+                                <path fill="#E94235" d="M10 4.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C14.463 1.891 12.426.999 10 .999a9 9 0 0 0-8.043 4.958L4.964 8.29C5.672 6.163 7.656 4.58 10 4.58"></path>
+                            </g>
+                        </svg>
+                        <span class="text-lg font-bold text-on-surface font-headline">Continue with Google</span>
+                    </button>
+                    <p class="text-xs text-on-surface-variant leading-relaxed max-w-[280px] mx-auto">
+                        By signing in, you agree to our <a class="text-primary hover:underline" href="#">Terms</a> and <a class="text-primary hover:underline" href="#">Privacy Policy</a>.
+                    </p>
+                </div>
+                <div class="mt-12 pt-8 border-t border-outline-variant/10">
+                    <p class="text-sm text-on-surface-variant">
+                        Need a new workspace? <a class="text-primary font-bold hover:underline" href="#">Get Started</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="fixed top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+    <div class="fixed bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-tertiary-container/10 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+    <footer class="w-full py-8 bg-transparent flex flex-col md:flex-row justify-center items-center gap-6 font-['Manrope'] text-sm tracking-wide">
+        <div class="flex flex-col md:flex-row gap-6 items-center">
+            <span class="text-[#2c3437]/40 dark:text-slate-500">© 2026 Skill Tracker Interface. All rights reserved.</span>
+            <div class="flex gap-6">
+                <a class="text-[#2c3437]/40 dark:text-slate-500 hover:text-[#2c3437] dark:hover:text-slate-200 opacity-80 hover:opacity-100 transition-opacity" href="#">Privacy Policy</a>
+                <a class="text-[#2c3437]/40 dark:text-slate-500 hover:text-[#2c3437] dark:hover:text-slate-200 opacity-80 hover:opacity-100 transition-opacity" href="#">Terms of Service</a>
+                <a class="text-[#2c3437]/40 dark:text-slate-500 hover:text-[#2c3437] dark:hover:text-slate-200 opacity-80 hover:opacity-100 transition-opacity" href="#">Help Center</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 🔥 FIREBASE SCRIPT -->
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCNVqD7P1k9ChJjSU34Ogdm_ImqrBxWt-8",
+            authDomain: "skill-tracker-d999b.firebaseapp.com",
+            projectId: "skill-tracker-d999b",
+            storageBucket: "skill-tracker-d999b.firebasestorage.app",
+            messagingSenderId: "422542205511",
+            appId: "1:422542205511:web:4b327b3f71408b752c0762",
+            measurementId: "G-WRVT7PFEP3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // 🔥 FIXED LOGIN FUNCTION
+        window.googleLogin = function () {
+
+            console.log("🔥 Button clicked");
+
+            const provider = new GoogleAuthProvider();
+
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    console.log("Google login success");
+
+                    const user = result.user;
+
+                    fetch("http://127.0.0.1:5000/google_login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            email: user.email
+                        })
+                    })
+                        .then(res => res.text())
+                        .then(data => {
+                            console.log(data);
+
+                            // 🔥 FIXED REDIRECT
+                            window.location.replace("/dashboard");
+                        });
+
+                })
+                .catch((error) => {
+                    console.log("❌ ERROR:", error);
+                    alert(error.message);
+                });
+        };
+
+    </script>
+
+</body>
+</html>
